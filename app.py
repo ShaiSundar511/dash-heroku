@@ -48,29 +48,6 @@ app.layout = html.Div([
   html.H1('Shai Sundar\'s Custom Dashboard'),
 
   # second row: <scratter-plot> <empty> <bar chart> 
-  html.Div([            
-    # scratter plot                      
-    html.Div([
-      dcc.Dropdown(),
-
-      dcc.Graph(
-        id='scatter-graph',
-        figure=px.scatter()
-      )
-    ], className='three columns'),
-
-    # # one blank column
-    # html.Div([
-    #     html.Div(id='empty-div', children='')
-    # ], className='one column'),
-    html.Div([
-      dcc.Dropdown(),
-
-      dcc.Graph(
-        id='my-graph',
-        figure=px.scatter()
-      )
-    ], className='three columns'),
 
     # bar chart
     html.Div([
