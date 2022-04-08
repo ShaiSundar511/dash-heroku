@@ -23,28 +23,73 @@ server = app.server
 # Enable Whitenoise for serving static files from Heroku (the /static folder is seen as root by Heroku) 
 server.wsgi_app = WhiteNoise(server.wsgi_app, root='static/') 
 
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
+df_country = pd.read_csv("https://raw.githubusercontent.com/smbillah/ist526/main/gapminder.csv")
 
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+my_fig = px.bar(
+  data_frame = df_country, 
+  y="pop",         # gdp per capita
+  x="continent",           # life expectancy  
+  #size="pop",            # population
+  color="country",     # group/label
+  hover_name="country",
+  #log_x=True, 
+  #size_max=55, 
+  #range_x=[100,100000], 
+  #range_y=[25,90],
+  title= "GDP Per Captia vs Life Expectancy of Countries", 
+  
+  # animation control
+  #animation_frame="year", 
+  #animation_group="country",
+)
 
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),#'<h1> this is a header </h1>'
-    #
-    # html.Div(children='''
-    #     Dash: A web application framework for Python.
-    # '''),
+app.layout = html.Div([
+  # first row: header
+  html.H1('Shai Sundar\'s Custom Dashboard'),
 
-    dcc.Graph(
-        id='example-graph',
-        figure=fig
-    )
+  # second row: <scratter-plot> <empty> <bar chart> 
+  html.Div([            
+    # scratter plot                      
+    html.Div([
+      dcc.Dropdown(),
+
+      dcc.Graph(
+        id='scatter-graph',
+        figure=px.scatter()
+      )
+    ], className='three columns'),
+
+    # # one blank column
+    # html.Div([
+    #     html.Div(id='empty-div', children='')
+    # ], className='one column'),
+    html.Div([
+      dcc.Dropdown(),
+
+      dcc.Graph(
+        id='my-graph',
+        figure=px.scatter()
+      )
+    ], className='three columns'),
+
+    # bar chart
+    html.Div([
+        dcc.Dropdown(),
+
+        dcc.Graph(
+          id='my_fig', 
+          figure=my_fig
+        )
+    ], className='six columns')
+    
+  ], className = 'row'),
+
 ])
+
+  
+# run the code
+# uncomment the following line to run in Google Colab
+app.run_server(mode='inline', port=8030)
 
 # Run dash app
 if __name__ == "__main__":
